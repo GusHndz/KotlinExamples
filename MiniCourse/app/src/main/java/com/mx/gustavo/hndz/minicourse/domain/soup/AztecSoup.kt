@@ -2,14 +2,16 @@ package com.mx.gustavo.hndz.minicourse.domain.soup
 
 import com.mx.gustavo.hndz.minicourse.common.TypeCutTortillaEnum
 import com.mx.gustavo.hndz.minicourse.common.TypeTortillaEnum
+import com.mx.gustavo.hndz.minicourse.common.Utils
 import com.mx.gustavo.hndz.minicourse.domain.Chili
 import com.mx.gustavo.hndz.minicourse.domain.Garlic
 import com.mx.gustavo.hndz.minicourse.domain.Ingredients
 import com.mx.gustavo.hndz.minicourse.domain.Onion
+import com.mx.gustavo.hndz.minicourse.domain.Soup
 import com.mx.gustavo.hndz.minicourse.domain.Tomato
 import com.mx.gustavo.hndz.minicourse.domain.Tortilla
 
-class AztecSoup : BrothListener {
+class AztecSoup : BrothListener, Soup() {
 
     override fun makeBroth(lstIngredients: List<Ingredients>): String {
         //Necesitamos estos ingredientes
@@ -72,7 +74,7 @@ class AztecSoup : BrothListener {
 //
 //        }
 
-        val strTypeCut = when(cutType) {
+        val strTypeCut = when (cutType) {
             TypeCutTortillaEnum.RECTANGLE -> {
                 TypeCutTortillaEnum.RECTANGLE.strName
             }
@@ -101,6 +103,9 @@ class AztecSoup : BrothListener {
 
 fun main() {
     val soup = AztecSoup()
+
+    println("Precio de la sopa: ${soup.getPrice()}")
+
     val ingredients: List<Ingredients> = listOf(
         Tomato(),
         Onion(),
@@ -112,6 +117,16 @@ fun main() {
         )
     )
 
+    try {
+        Utils.payment(soup)
+    } catch (ex: Exception) {
+        println("ERROR -> ${ex.message}")
+    } finally {
+        soup.newPrice(95.0)
+    }
+
+    println("Nuevo precio de la sopa: ${soup.getPrice()}")
+    Utils.payment(soup)
 
     print(soup.makeBroth(ingredients))
 }
